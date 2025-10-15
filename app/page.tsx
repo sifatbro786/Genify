@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Markdown from "react-markdown";
 
-export default function Home() {
+export default function HomePage() {
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
     const [query, setQuery] = useState("");
