@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import TopNav from "@/components/nav/top-nav";
+import { ThemeProvider } from "@/context/theme-provider";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -20,12 +21,19 @@ export default function RootLayout({
 }>) {
     return (
         <ClerkProvider>
-            <html lang="en">
+            <html lang="en" suppressHydrationWarning>
                 <body className={`${inter.className} antialiased`}>
-                    <header>
-                        <TopNav />
-                    </header>
-                    <main>{children}</main>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <header>
+                            <TopNav />
+                        </header>
+                        <main>{children}</main>
+                    </ThemeProvider>
                 </body>
             </html>
         </ClerkProvider>
