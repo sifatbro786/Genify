@@ -18,7 +18,7 @@ interface Form {
 export interface UsageContextType {
     count: number;
     fetchUsage: () => void;
-    // openModal: boolean;
-    // setOpenModal: (open: boolean) => void;
-    // subscribed: boolean;
+    openModal: boolean;
+    setOpenModal: (open: boolean) => void;
+    subscribed: boolean;
 }

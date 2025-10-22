@@ -1,6 +1,6 @@
 "use client";
 
-import { mainAI } from "@/actions/ai";
+import { mainAI, saveQuery } from "@/actions/ai";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,14 +47,8 @@ export default function TemplateDetailsPage({ params }: { params: { slug: string
             setContent(data ?? "");
 
             // Save to database
-            await fetch("/api/query", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ template, email, query, content: data }),
-            });
-
-            // Fetch usage
-            await fetchUsage();
+            await saveQuery(template, email, query, data ?? "");
+            fetchUsage();
         } catch (error) {
             setContent(`An error occurred: ${error}. Please try again.`);
         } finally {
@@ -89,7 +83,7 @@ export default function TemplateDetailsPage({ params }: { params: { slug: string
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-5 md:gap-y-0 md:gap-x-5 px-5">
                 <div className="col-span-1 bg-slate-100 dark:bg-slate-900 rounded-md border p-5">
                     <div className="flex flex-col gap-3">
                         <Image src={template.icon} alt={template.name} width={50} height={50} />

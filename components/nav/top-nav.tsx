@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { ThemeToggle } from "./theme-toggle";
 
 export default function TopNav() {
-    const { isSignedIn, user } = useUser();
+    const { isSignedIn } = useUser();
 
     return (
         <nav className="flex justify-between items-center py-3 px-4 border-b">
@@ -14,10 +14,12 @@ export default function TopNav() {
                 Genify
             </Link>
 
+            <Link href="/membership" className="hidden md:block">🔥 Join free or $9.99/month</Link>
+
             <div className="flex gap-3 items-center">
                 {isSignedIn && (
                     <Link href="/dashboard" className="cursor-pointer font-semibold">
-                        {user?.firstName + "'s"} Dashboard
+                        Dashboard
                     </Link>
                 )}
 

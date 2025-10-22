@@ -1,3 +1,4 @@
+import MobileNav from "@/components/nav/mobile-nav";
 import SideNav from "@/components/nav/side-nav";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -9,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <div className="flex flex-col md:flex-row flex-1 w-full">
                 <div className="md:hidden w-full">
-                    {/* <MobileNav /> */}
+                    <MobileNav />
                 </div>
                 <div className="flex-1 overflow-y-auto">{children}</div>
             </div>

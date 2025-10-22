@@ -14,6 +14,29 @@ export async function mainAI(text: string) {
     return response.text;
 }
 
+export async function saveQuery(template: object, email: string, query: string, content: string) {
+    try {
+        await dbConnect();
+
+        const newQuery = new Query({
+            template,
+            email,
+            query,
+            content,
+        });
+
+        await newQuery.save();
+        return {
+            ok: true,
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            ok: false,
+        };
+    }
+}
+
 export async function getQueries(email: string, page: number, pageSize: number) {
     try {
         await dbConnect();

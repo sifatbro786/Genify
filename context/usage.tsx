@@ -10,6 +10,8 @@ const UsageContext = createContext<UsageContextType | null>(null);
 export const UsageProvider = ({ children }: { children: React.ReactNode }) => {
     //? state
     const [count, setCount] = useState(0);
+    const [openModal, setOpenModal] = useState(false);
+    const [subscribed, setSubscribed] = useState(false);
 
     //? hook
     const { user } = useUser();
@@ -21,12 +23,20 @@ export const UsageProvider = ({ children }: { children: React.ReactNode }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [email]);
 
+    useEffect(() => {
+        if (count > 10000) setOpenModal(true);
+    }, [count]);
+
     const fetchUsage = async () => {
         const res = await usageCount(email);
         setCount(res);
     };
 
-    return <UsageContext.Provider value={{ count, fetchUsage }}>{children}</UsageContext.Provider>;
+    return (
+        <UsageContext.Provider value={{ count, fetchUsage, openModal, setOpenModal, subscribed }}>
+            {children}
+        </UsageContext.Provider>
+    );
 };
 
 export const useUsage = () => {

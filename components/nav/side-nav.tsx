@@ -4,6 +4,7 @@ import { LayoutDashboard, FileClock, WalletCards, Settings } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Usage from "./usage";
+import SignUpModal from "../modal/sign-up-modal";
 
 const menu = [
     {
@@ -48,8 +49,7 @@ export default function SideNav() {
                             className="flex justify-center items-center md:justify-start w-full"
                         >
                             <div className="flex items-center">
-                                {item.icon}{" "}
-                                <span className="ml-2 hidden md:inline">{item.name}</span>
+                                {item.icon} <span className="ml-2 md:inline">{item.name}</span>
                             </div>
                         </Link>
                     </li>
@@ -58,6 +58,7 @@ export default function SideNav() {
 
             <div className="pb-20 mt-auto">
                 <Usage />
+                <SignUpModal />
             </div>
         </div>
     );
