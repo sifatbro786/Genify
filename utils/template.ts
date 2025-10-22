@@ -2,7 +2,7 @@ const templates = [
     {
         id: 1,
         name: "Blog Ideas",
-        desc: "An AI tool that generate blog ideas based on the topic you provide",
+        desc: "An AI tool that generate blog ideas based on the topic you provide. It will give you a list of blog topics to start with.",
         category: "Blog",
         icon: "https://cdn-icons-png.flaticon.com/128/4186/4186534.png",
         aiPrompt: "Give me 5 blog topic ideas in bullet points for: ",
@@ -36,7 +36,7 @@ const templates = [
     {
         id: 3,
         name: "SMS",
-        desc: "An AI tool that serves as your friend to write awesome message replies in seconds.",
+        desc: "An AI tool that serves as your friend to write awesome message replies in seconds. It will give you a list of message topics to start with.",
         category: "sms",
         icon: "https://cdn-icons-png.flaticon.com/128/890/890260.png",
         slug: "ai-message",
@@ -53,7 +53,7 @@ const templates = [
     {
         id: 4,
         name: "Email Reply",
-        desc: "An AI tool that serves as your personal assistant to write professional email replies in seconds.",
+        desc: "An AI tool that serves as your personal assistant to write professional email replies in seconds. It will give you a list of email topics to start with.",
         category: "email",
         icon: "https://cdn-icons-png.flaticon.com/128/944/944948.png",
         slug: "ai-email",
@@ -197,7 +197,7 @@ const templates = [
     {
         id: 12,
         name: "Instagram Post/Reel Idea",
-        desc: "An AI tool that generate New and trending instagram idea depends on your niche",
+        desc: "An AI tool that generate New and trending instagram idea depends on your niche and give output in  in rich text editor format",
         icon: "https://cdn-icons-png.flaticon.com/128/1029/1029183.png",
         category: "instagram",
 

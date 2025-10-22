@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { mainAI } from "./actions/ai";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import Markdown from "react-markdown";
+import { mainAI } from "../actions/ai";
 
 export default function HomePage() {
     const [response, setResponse] = useState("");

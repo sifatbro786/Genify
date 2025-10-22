@@ -1,49 +1,92 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { mainAI } from "@/actions/ai";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useUsage } from "@/context/usage";
 import templates from "@/utils/template";
+import { Template } from "@/utils/types";
+import { useUser } from "@clerk/nextjs";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import { Editor } from "@toast-ui/react-editor";
+import { ArrowLeft, Copy, Loader2Icon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-
-export interface Template {
-    name: string;
-    slug: string;
-    icon: string;
-    desc: string;
-    category: string;
-    aiPrompt: string;
-    form: Form[];
-}
-
-export interface Form {
-    label: string;
-    field: string;
-    name: string;
-    required: boolean;
-}
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export default function TemplateDetailsPage({ params }: { params: { slug: string } }) {
     const [query, setQuery] = useState("");
+    const [content, setContent] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const editorRef = useRef<Editor | null>(null);
+
+    // hooks
+    const { fetchUsage } = useUsage();
+    const { user } = useUser();
+    const email = (user?.primaryEmailAddress?.emailAddress as string) || "";
+
+    useEffect(() => {
+        if (content) {
+            const editorInstance = editorRef.current?.getInstance();
+            editorInstance?.setMarkdown(content);
+        }
+    }, [content]);
 
     const template = templates.find((template) => template.slug === params.slug) as Template;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(query);
+
+        try {
+            setLoading(true);
+
+            const data = await mainAI(template.aiPrompt + query);
+            setContent(data ?? "");
+
+            // Save to database
+            await fetch("/api/query", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ template, email, query, content: data }),
+            });
+
+            // Fetch usage
+            await fetchUsage();
+        } catch (error) {
+            setContent(`An error occurred: ${error}. Please try again.`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCopy = async () => {
+        const editorInstance = editorRef.current?.getInstance();
+        const content = editorInstance?.getMarkdown();
+
+        try {
+            await navigator.clipboard.writeText(content ?? "");
+            toast.success("content copied to clipboard");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to copy to clipboard");
+        }
     };
 
     return (
-        <>
+        <div>
             <div className="flex justify-between mx-5 my-3">
                 <Link href="/dashboard">
                     <Button>
                         <ArrowLeft /> <span className="ml-2">Back</span>
                     </Button>
                 </Link>
+
+                <Button onClick={handleCopy}>
+                    <Copy /> <span className="ml-2">Copy</span>
+                </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
@@ -77,16 +120,29 @@ export default function TemplateDetailsPage({ params }: { params: { slug: string
                                         required={item.required}
                                     />
                                 )}
-                                <Button type="submit" className="w-full py-6">
-                                    Generate Content
+                                <Button type="submit" className="w-full py-6" disabled={loading}>
+                                    {loading ? (
+                                        <Loader2Icon className="animate-spin mr-2" />
+                                    ) : (
+                                        "Generate Contents"
+                                    )}
                                 </Button>
                             </div>
                         ))}
                     </form>
                 </div>
 
-                <div className="col-span-2"></div>
+                <div className="col-span-2">
+                    <Editor
+                        ref={editorRef}
+                        initialValue="Generated content will appear here."
+                        previewStyle="vertical"
+                        height="600px"
+                        initialEditType="wysiwyg"
+                        useCommandShortcut={true}
+                    />
+                </div>
             </div>
-        </>
+        </div>
     );
 }

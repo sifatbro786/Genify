@@ -3,6 +3,7 @@
 import { LayoutDashboard, FileClock, WalletCards, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Usage from "./usage";
 
 const menu = [
     {
@@ -31,26 +32,33 @@ export default function SideNav() {
     const pathname = usePathname();
 
     return (
-        <div className="h-screen p-5 shadow-sm border-r border-b">
-            {menu.map((item, idx) => (
-                <div
-                    key={idx}
-                    className={`${
-                        pathname === item.path
-                            ? "bg-primary text-white dark:text-black"
-                            : "hover:bg-primary hover:text-white hover:dark:text-black"
-                    } flex md:m-2 mr-2 p-2 rounded-lg cursor-pointer`}
-                >
-                    <ul className="flex justify-center items-center md:justify-start w-full">
-                        <li>
-                            <Link href={item.path} className="flex items-center">
+        <div className="flex flex-col h-full">
+            <ul className="flex-1 space-y-2">
+                {menu.map((item, idx) => (
+                    <li
+                        key={idx}
+                        className={`${
+                            pathname === item.path
+                                ? "border-primary text-primary"
+                                : "hover:border-primary hover:text-primary"
+                        } flex md:m-2 mr-2 p-2 rounded-lg cursor-pointer border`}
+                    >
+                        <Link
+                            href={item.path}
+                            className="flex justify-center items-center md:justify-start w-full"
+                        >
+                            <div className="flex items-center">
                                 {item.icon}{" "}
                                 <span className="ml-2 hidden md:inline">{item.name}</span>
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-            ))}
+                            </div>
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+
+            <div className="pb-20 mt-auto">
+                <Usage />
+            </div>
         </div>
     );
 }
