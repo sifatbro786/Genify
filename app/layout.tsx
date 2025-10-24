@@ -5,7 +5,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import TopNav from "@/components/nav/top-nav";
 import { ThemeProvider } from "@/context/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import dbConnect from "@/utils/db";
 import { UsageProvider } from "@/context/usage";
 
 const inter = Inter({
@@ -17,13 +16,11 @@ export const metadata: Metadata = {
     description: "It's an AI-powered Software SaaS application for content generation.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    await dbConnect();
-
     return (
         <ClerkProvider>
             <html lang="en" suppressHydrationWarning>

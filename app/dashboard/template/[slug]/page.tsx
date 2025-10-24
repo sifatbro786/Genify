@@ -17,17 +17,18 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 export default function TemplateDetailsPage({ params }: { params: { slug: string } }) {
+    //? state
     const [query, setQuery] = useState("");
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
-
     const editorRef = useRef<Editor | null>(null);
 
-    // hooks
-    const { fetchUsage } = useUsage();
+    //? hooks
+    const { fetchUsage, subscribed, count } = useUsage();
     const { user } = useUser();
     const email = (user?.primaryEmailAddress?.emailAddress as string) || "";
 
+    //? effects
     useEffect(() => {
         if (content) {
             const editorInstance = editorRef.current?.getInstance();
@@ -37,6 +38,7 @@ export default function TemplateDetailsPage({ params }: { params: { slug: string
 
     const template = templates.find((template) => template.slug === params.slug) as Template;
 
+    //? handlers functions
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -97,6 +99,7 @@ export default function TemplateDetailsPage({ params }: { params: { slug: string
                                 <label htmlFor={item.name} className="font-bold pb-5">
                                     {item.label}
                                 </label>
+
                                 {item.field === "input" ? (
                                     <Input
                                         id={item.name}
@@ -114,22 +117,30 @@ export default function TemplateDetailsPage({ params }: { params: { slug: string
                                         required={item.required}
                                     />
                                 )}
-                                <Button type="submit" className="w-full py-6" disabled={loading}>
-                                    {loading ? (
-                                        <Loader2Icon className="animate-spin mr-2" />
-                                    ) : (
-                                        "Generate Contents"
-                                    )}
-                                </Button>
                             </div>
                         ))}
+
+                        <Button
+                            type="submit"
+                            className="w-full py-6"
+                            disabled={
+                                loading ||
+                                (!subscribed &&
+                                    count >= Number(process.env.NEXT_PUBLIC_FREE_TIER_USAGE))
+                            }
+                        >
+                            {loading && <Loader2Icon className="animate-spin mr-2" />}
+                            {subscribed || count < Number(process.env.NEXT_PUBLIC_FREE_TIER_USAGE)
+                                ? "Generate content"
+                                : "Subscribe to generate content"}
+                        </Button>
                     </form>
                 </div>
 
                 <div className="col-span-2">
                     <Editor
                         ref={editorRef}
-                        initialValue="Generated content will appear here."
+                        initialValue="Generated content will appear here..."
                         previewStyle="vertical"
                         height="600px"
                         initialEditType="wysiwyg"

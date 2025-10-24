@@ -4,21 +4,27 @@ import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/n
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "./theme-toggle";
+import { useUsage } from "@/context/usage";
 
 export default function TopNav() {
     const { isSignedIn } = useUser();
+    const { subscribed } = useUsage();
 
     return (
-        <nav className="flex justify-between items-center py-3 px-4 border-b">
+        <nav className="flex justify-between items-center py-3 px-4 border-b dark:border-gray-600 dark:bg-slate-900">
             <Link href="/" className="text-2xl font-bold">
                 Genify
             </Link>
 
-            <Link href="/membership" className="hidden md:block">🔥 Join free or $9.99/month</Link>
+            {!subscribed && (
+                <Link href="/membership" className="hidden md:block">
+                    🔥 Join free or $9.99/month
+                </Link>
+            )}
 
             <div className="flex gap-3 items-center">
                 {isSignedIn && (
-                    <Link href="/dashboard" className="cursor-pointer font-semibold">
+                    <Link href="/dashboard" className="text-xs md:text-base font-semibold">
                         Dashboard
                     </Link>
                 )}
